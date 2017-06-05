@@ -1,0 +1,11 @@
+canvas {
+
+    height: 256px;
+    width: 512px;
+    border: 6px solid white;
+
+} 
+
+body {
+	background-color: black;
+}
