@@ -127,7 +127,7 @@ Computer.prototype.move = function (yDist) {
 function Ball(x, y) {
 	this.x = x;
 	this.y = y;
-	this.radius = 15;
+	this.radius = 5;
 }
 
 Ball.prototype.render = function() {
