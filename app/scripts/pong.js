@@ -39,6 +39,7 @@ var step = function () {
 var update = function () {
 	ball.update(human, computer);
 	human.paddle.update();
+	computer.update(ball);
 };
 
 function paintCanvas() {
@@ -61,7 +62,7 @@ function Paddle(x, y) {
 	this.y = y;
 	this.color = "#fff";
 	this.width = 15;
-	this.height = 100;
+	this.height = 80;
 	this.y_speed = 10;
 	this.boundary = {
 		top: this.y,
@@ -78,6 +79,31 @@ function Human() {
 function Computer() {
 	this.paddle = new Paddle(725, 200);
 }
+
+Computer.prototype.move = function (dy) {
+	this.paddle.y += dy;
+	this.paddle.boundary.top += dy;
+	this.paddle.boundary.bottom += dy;
+	this.paddle.y_speed += dy;
+};
+
+Computer.prototype.update = function (ball) {
+
+	var computer_y = ball.y;
+
+	var diff = -((this.paddle.y + (this.paddle.height * 0.5)) - computer_y);
+	if (diff < 0 && diff < -4) { 
+		diff = -5;
+	} else if (diff > 0 && diff > 4) { 
+		diff = 5;
+	}
+	this.paddle.move(diff*0.85);
+	if (this.paddle.y < 0) {
+		this.paddle.y = 0;
+	} else if (this.paddle.y + this.paddle.height > height) {
+		this.paddle.y = (height - this.paddle.height);
+	}
+};
 
 Paddle.prototype.render = function () {
 	context.beginPath();
@@ -107,6 +133,8 @@ Paddle.prototype.update = function () {
 		}
 	}
 };
+
+
 
 function randomVelocity() {
 	var num = Math.floor(Math.random() * 5) + 1;
@@ -176,7 +204,7 @@ Ball.prototype.update = function (human, computer) {
 			this.x += this.x_speed;
 		}
 		else if (paddle === computer.paddle) {
-			this.x_speed = this.speed + 3;
+			this.x_speed = this.speed;
 			this.y_speed += this.speed / 2;
 			this.x += this.x_speed;
 		}	
