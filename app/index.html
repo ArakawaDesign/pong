@@ -5,11 +5,18 @@
     <title>Ping</title>
     <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-	<div id="container">
- 		<canvas id="canvas"></canvas>
-    </div>
-    
+<body>    
+  	<div id="container">
+  		
+  		<canvas id="game-canvas">
+  		</canvas>
+  		<div id="end-game" style="visibility:hidden">
+				<span id="end-game-text"></span><br/>
+  			<span id="play-again" onclick="location.reload()">Play Again?</span>
+  		</div>
+  		
+	</div>   	
+   	
     <script src="/scripts/pong.js"></script>
 </body>
 </html>

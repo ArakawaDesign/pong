@@ -7,12 +7,16 @@ var animate = window.requestAnimationFrame ||
 		window.setTimeout(callback, 1000 / 60);
 };
 
-var canvas = document.getElementById('canvas');
+var canvas = document.getElementById('game-canvas');
 var width = 750;
 var	height = 500;
 canvas.width = width;
 canvas.height = height;
 var context = canvas.getContext('2d');
+var score = {
+	human: 0,
+	computer: 0
+};
 
 var human = new Human();
 var computer = new Computer();
@@ -24,6 +28,8 @@ window.onload = function () {
 
 var render = function () {
 	paintCanvas();
+
+	drawScore();
 	drawNet();
 	human.paddle.render();
 	computer.paddle.render();
@@ -42,9 +48,22 @@ var update = function () {
 	computer.update(ball);
 };
 
+function drawScore() {
+	console.log("working");
+	context.font = "50px Arial";
+	context.fillStyle = "#fff";
+	context.fillText(score.human, (width / 2) - 50, 50);
+	context.fillText(score.computer, (width / 2) + 25 , 50);
+}
+
+
 function paintCanvas() {
 	context.fillStyle = "#000";
-	context.fillRect(0.5, 0.5, width, height);
+	context.fillRect(0.5, 0.5, width, height);	
+	context.font = "20px Arial";
+	context.fillStyle = "#fff";
+	context.fillText("PLAYER", 8, 20);
+	context.fillText("COMPUTER", 630, 20);
 }
 
 function drawNet() {
@@ -63,7 +82,7 @@ function Paddle(x, y) {
 	this.color = "#fff";
 	this.width = 15;
 	this.height = 80;
-	this.y_speed = 10;
+	this.y_speed = 100;
 	this.boundary = {
 		top: this.y,
 		bottom: this.y + this.height,
@@ -199,16 +218,47 @@ Ball.prototype.update = function (human, computer) {
 		}
 
 		if (paddle === human.paddle){
-			this.x_speed = this.speed;
-			this.y_speed += this.speed / 2;
+			this.x_speed = this.speed + 5;
+			this.y_speed += (this.speed / 2);
 			this.x += this.x_speed;
 		}
 		else if (paddle === computer.paddle) {
 			this.x_speed = this.speed;
-			this.y_speed += this.speed / 2;
+			this.y_speed += (this.speed / 2);
 			this.x += this.x_speed;
 		}	
 		
+	} else {
+		if (paddle === human.paddle){
+			if ((this.x) < 0) {
+				score.computer ++;
+				this.x = width/2;
+				this.y = height/2;
+				human.paddle.y = 200;
+				this.y_speed = 0;
+				if (score.computer === 10){
+					document.getElementById('end-game-text').innerHTML = "Sorry, you lost!";
+					document.getElementById('end-game').style.visibility = "visible";
+					score.human = 0;
+				  score.computer = 0;
+				}
+			}
+		}
+		else {
+			if ((this.x + this.radius) > width){
+				score.human ++;
+				this.x = width / 2;
+				this.y = height / 2;
+				human.paddle.y = 200;
+				this.y_speed = 0;
+				if (score.human === 10){
+					document.getElementById('end-game-text').innerHTML = "Congratulations, you won!";
+					document.getElementById('end-game').style.visibility = "visible";
+					score.human = 0;
+				  score.computer = 0;
+				}
+			}
+		}
 	}
 
 	if ((this.x + this.radius) >= computer.paddle.x) {
