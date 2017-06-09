@@ -142,12 +142,12 @@ Paddle.prototype.update = function () {
 		var val = Number(key);
 		if (val === 38) {
 			if (human.paddle.y >= 5) {
-				human.paddle.move(-5);
+				human.paddle.move(-15);
 			}
 		}
 		if (val === 40) {
 			if ((human.paddle.y + human.paddle.height) <= 495) {
-				human.paddle.move(5);
+				human.paddle.move(15);
 			}
 		}
 	}
@@ -218,13 +218,13 @@ Ball.prototype.update = function (human, computer) {
 		}
 
 		if (paddle === human.paddle){
-			this.x_speed = this.speed + 5;
+			this.x_speed = this.speed;
 			this.y_speed += (this.speed / 2);
 			this.x += this.x_speed;
 		}
 		else if (paddle === computer.paddle) {
 			this.x_speed = this.speed;
-			this.y_speed += (this.speed / 2);
+			this.y_speed += (this.speed * 2);
 			this.x += this.x_speed;
 		}	
 		
@@ -235,7 +235,7 @@ Ball.prototype.update = function (human, computer) {
 				this.x = width/2;
 				this.y = height/2;
 				human.paddle.y = 200;
-				this.y_speed = 0;
+				this.y_speed = randomVelocity();
 				if (score.computer === 10){
 					document.getElementById('end-game-text').innerHTML = "Sorry, you lost!";
 					document.getElementById('end-game').style.visibility = "visible";
@@ -250,7 +250,7 @@ Ball.prototype.update = function (human, computer) {
 				this.x = width / 2;
 				this.y = height / 2;
 				human.paddle.y = 200;
-				this.y_speed = 0;
+				this.y_speed = randomVelocity();
 				if (score.human === 10){
 					document.getElementById('end-game-text').innerHTML = "Congratulations, you won!";
 					document.getElementById('end-game').style.visibility = "visible";
@@ -263,8 +263,8 @@ Ball.prototype.update = function (human, computer) {
 
 	if ((this.x + this.radius) >= computer.paddle.x) {
 		if ((this.y - this.radius) < (computer.paddle.y + computer.paddle.height) && (this.y + this.radius) > computer.paddle.y) {
-			this.x_speed = -this.x_speed;
-			this.y_speed = -this.y_speed;
+			this.x_speed = -this.speed;
+			this.y_speed = (-this.speed);
 
 		}
 	}
